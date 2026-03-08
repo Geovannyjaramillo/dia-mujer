@@ -1,271 +1,172 @@
-*{
-box-sizing:border-box;
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body{
-
-margin:0;
-width:100vw;
-height:100vh;
-height:100dvh;
-
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-
-font-family:Georgia, serif;
-
-background-image:url("./img/fondo.png");
-background-size:cover;
-background-position:center;
-
-overflow:hidden;
-
+/* ── BODY: ocupa exactamente la pantalla, sin scroll ── */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: manipulation;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-/* capa suave */
+  font-family: Georgia, serif;
 
-.overlay{
-
-position:absolute;
-width:100%;
-height:100%;
-
-background:rgba(150,50,150,0.35);
-
+  background-image: url("./img/fondo.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
 }
 
-
-/* escena — tamaño inyectado por JS */
-
-.scene{
-
-perspective:1200px;
-z-index:2;
-flex-shrink:0;
-
+/* ── CAPA SUAVE ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(150, 50, 150, 0.35);
+  pointer-events: none;
+  z-index: 1;
 }
 
-
-/* carrusel */
-
-.carousel{
-
-width:100%;
-height:100%;
-
-position:relative;
-
-transform-style:preserve-3d;
-
-transition:transform 1.2s;
-
+/* ── ESCENA ── */
+.scene {
+  position: relative;
+  perspective: 1200px;
+  z-index: 2;
+  flex-shrink: 0;
+  /* ancho/alto inyectados por JS */
 }
 
-
-/* tarjetas — tamaño y posición inyectados por JS */
-
-.card{
-
-position:absolute;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-text-align:center;
-
-border-radius:20px;
-
-box-shadow:0 15px 40px rgba(0,0,0,0.4);
-
-line-height:1.5;
-
-color:#5a004f;
-
+/* ── CARRUSEL ── */
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s ease;
 }
 
-
-/* colores suaves */
-
-.c1{background:#ffe4ec;}
-.c2{background:#f5e6ff;}
-.c3{background:#ffd9e8;}
-.c4{background:#eee0ff;}
-.c5{background:#fff0f6;}
-.c6{background:#f3e8ff;}
-
-
-/* foto */
-
-.photo{
-
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
-display:block;
-
+/* ── TARJETAS: todas las medidas las pone JS ── */
+.card {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  line-height: 1.5;
+  color: #5a004f;
+  overflow: hidden;
+  /* width, height, left, top, font-size, padding, transform → JS */
 }
 
+/* colores */
+.c1 { background: #ffe4ec; }
+.c2 { background: #f5e6ff; }
+.c3 { background: #ffd9e8; }
+.c4 { background: #eee0ff; }
+.c5 { background: #fff0f6; }
+.c6 { background: #f3e8ff; }
 
-/* texto flotante */
-
-.movingText{
-
-animation:floatText 4s ease-in-out infinite;
-margin:0;
-padding:0;
-
+/* ── FOTO ── */
+.photo {
+  display: block;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  /* width → JS */
 }
 
-@keyframes floatText{
-
-0%{transform:translateY(0);}
-50%{transform:translateY(-8px);}
-100%{transform:translateY(0);}
-
+/* ── TEXTO FLOTANTE ── */
+.movingText {
+  animation: floatText 4s ease-in-out infinite;
 }
 
-
-/* hint */
-
-.hint{
-
-position:absolute;
-bottom:clamp(12px, 3vh, 40px);
-
-color:white;
-font-size:clamp(11px, 2.8vw, 16px);
-
-z-index:3;
-text-align:center;
-padding:0 10px;
-
+@keyframes floatText {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
 }
 
-
-/* canvas */
-
-#petals,#stars{
-
-position:absolute;
-top:0;
-left:0;
-
-pointer-events:none;
-
+/* ── HINT ── */
+.hint {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  z-index: 3;
+  pointer-events: none;
+  /* font-size → JS */
 }
 
-
-/* pantalla final */
-
-#finalMessage{
-
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:100%;
-height:100dvh;
-
-background-image:url("./img/MYG.png");
-background-size:cover;
-background-position:center top;
-
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-
-opacity:0;
-transform:scale(0);
-
-transition:all 1.5s;
-
-z-index:10;
-
+/* ── CANVAS ── */
+#petals, #stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
 }
 
+/* ── PANTALLA FINAL ── */
+#finalMessage {
+  position: fixed;
+  inset: 0;
 
-/* capa oscura sobre la imagen */
+  background-image: url("./img/MYG.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 
-#finalMessage::before{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-content:"";
-position:absolute;
-inset:0;
-background:rgba(80,0,80,0.48);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 1.5s ease, transform 1.5s ease;
 
+  z-index: 10;
 }
 
-
-/* texto gigante */
-
-.hugeText{
-
-font-size:clamp(28px, 14vw, 120px);
-
-text-align:center;
-
-color:white;
-
-text-shadow:
-0 0 20px pink,
-0 0 40px purple;
-
-animation:floatText 3s infinite;
-
-position:relative;
-z-index:1;
-
-margin:0;
-line-height:1.05;
-
+#finalMessage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(70, 0, 70, 0.48);
 }
 
-
-/* reinicio */
-
-.restart{
-
-color:white;
-margin-top:clamp(12px, 3vh, 30px);
-font-size:clamp(12px, 3.2vw, 20px);
-
-position:relative;
-z-index:1;
-text-align:center;
-padding:0 16px;
-
+/* ── TEXTO GIGANTE FINAL ── */
+.hugeText {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+  line-height: 1.05;
+  text-shadow:
+    0 0 20px pink,
+    0 0 40px purple;
+  animation: floatText 3s ease-in-out infinite;
+  /* font-size → JS */
 }
 
-
-/* móviles muy pequeños (ancho < 360px) */
-
-@media(max-width:359px){
-
-.hugeText{
-font-size:clamp(24px, 16vw, 60px);
-}
-
-}
-
-
-/* landscape móvil */
-
-@media(max-height:450px) and (orientation:landscape){
-
-.hugeText{
-font-size:clamp(20px, 8vh, 80px);
-line-height:1;
-}
-
-.restart{
-margin-top:6px;
-font-size:clamp(11px, 2vh, 16px);
-}
-
+/* ── REINICIO ── */
+.restart {
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-align: center;
+  padding: 0 20px;
+  /* font-size, margin-top → JS */
 }
